@@ -42,6 +42,8 @@ Then you can run script.
 
 We use Sequence-based identifiers for versioning.
 
+Current version is 1.0.0
+
 ## Authors
 
 * **Tymoteusz Stępień** - *Initial work* - [WhiteLeash](https://github.com/WhiteLeash)

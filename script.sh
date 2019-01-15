@@ -9,7 +9,7 @@ MAIL_LOG="/var/log/exim_mainlog"
 SUBJECT="Spam check on $HOSTNAME"
 MAIL_DESTINATION="example@example.com"
 BODY_FILE="msg-body.txt"
-NUMER_OF_PEOPLE=5
+NUMBER_OF_PEOPLE=5
 
 # Script
 

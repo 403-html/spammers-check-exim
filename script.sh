@@ -29,6 +29,12 @@ PREPARE_ENV () {
     echo "Najwieksza wysyłka pochodzi od:" >> $BODY_FILE
 }
 
+# Write line to file
+WRITE_TO_FILE () {
+    line=$1
+    echo "$line" >> $BODY_FILE
+}
+
 # Check the last 5 people sending the most messages. 
 CHECK_WHO () {
     COMMAND=`cat $MAIL_LOG | awk '{print $3}' | uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n | tail -$NUMBER_OF_PEOPLE`
@@ -37,7 +43,7 @@ CHECK_WHO () {
         # Check if it's path to user
         if [[ $line =~ .*(cwd=.*) ]]
         then
-        echo "$line" >> $BODY_FILE
+            WRITE_TO_FILE "$line"
         fi
     done
 }

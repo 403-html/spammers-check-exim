@@ -3,6 +3,7 @@ Script to control spammers on your server with exim.
 
 ## Table of Content
 - [Short about script](#SpammersCheck)
+- [Table of Content](##Table-of-Content)
 - [What's needed to run script](##Prerequisites)
     - [How to download script and run it](###Installing-and-running)
 - [Which packages were used to build it](##Built-With)

@@ -18,7 +18,7 @@ yum install mailx
 ```
 ### Installing and running
 
-Download script
+Download script from below command or head to [releases](https://github.com/WhiteLeash/spammers-check-exim/releases) where you can find even older releases of this script.
 ```
 wget https://github.com/WhiteLeash/spammers-check-exim/blob/master/script.sh
 ```

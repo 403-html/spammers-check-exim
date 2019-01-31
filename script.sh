@@ -13,7 +13,6 @@ BODY_FILE="msg-body.txt"
 NUMBER_OF_PEOPLE=5
 
 # Script
-UNIQ_AND_SORT=`uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n`
 
 # Prepare environment
 PREPARE_ENV () {

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# version 1.0.3
+# version 1.0.4
 # pre 1.1
 
 # Variables
@@ -13,7 +13,7 @@ BODY_FILE="msg-body.txt"
 NUMBER_OF_PEOPLE=5
 
 # Script
-UNIQ_AND_SORT="uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n"
+UNIQ_AND_SORT=`uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n`
 
 # Prepare environment
 PREPARE_ENV () {
@@ -39,13 +39,13 @@ WRITE_TO_FILE () {
 
 # Check the last 5 people sending the most messages. 
 CHECK_WHO () {
-    COMMAND=`cat $EXIM_LOG | awk '{print $3}' | $UNIQ_AND_SORT | tail -n$NUMBER_OF_PEOPLE`
+    COMMAND=`cat $EXIM_LOG | awk '{print $3}' | uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n | tail -n$NUMBER_OF_PEOPLE`
     echo "$COMMAND" | while read -r user
     do
         # Check if it's path to user
         if [[ $user =~ .*(cwd=.*) ]]
         then
-            WRITE_TO_FILE "$user"
+            CHECK_FROM_WHERE "$user"
         fi
     done
 }
@@ -60,20 +60,20 @@ CHECK_FROM_WHERE () {
     if [[ CRON_SEARCH =~ \-(FCronDaemon)$ ]]
     then
         WRITE_TO_FILE "$MAIL_USER wysyła maile najprawdopodobniej przez zadanie crona"
-        return
+        return 0
     fi
     
     # Check if it's mail password leaking
     maillog_today_date=`tail -n1 $MAIL_LOG | awk '{print $1 " " $2}'`
     IP_REGEX="awk '{match($0,/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/); ip = substr($0,RSTART,RLENGTH); print ip}'"
-    LOGGED_IP=`cat $MAIL_LOG | grep $maillog_today_date | grep $MAIL_USER | grep "Login: " | awk '{print $10}' | $IP_REGEX | $UNIQ_AND_SORT`
+    LOGGED_IP=`cat $MAIL_LOG | grep $maillog_today_date | grep $MAIL_USER | grep "Login: " | awk '{print $10}' | $IP_REGEX | uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n`
     echo "$LOGGED_IP" | while read -r ip
     do
         IP_LOCATION=`csf -i $ip | awk -F "(" '{print $2}' | awk -F "/" '{print $1}'`
         if ! [[ IP_LOCATION -eq "PL" ]]
         then
             WRITE_TO_FILE "Dla $MAIL_USER prawdopodobnie nastąpił wyciek hasła do skrzynki pocztowej"
-            return
+            return 0
         fi
     done
 
@@ -82,12 +82,12 @@ CHECK_FROM_WHERE () {
     if [[ SCRIPT_CHECK -eq "public_html" ]]
     then
         WRITE_TO_FILE "$MAIL_USER prawdopodobnie prowadzi wysyłkę z formularza/skrypu"
-        return
+        return 0
     fi
 
     # Not identity sending
     WRITE_TO_FILE "$MAIL_USER prowadzi wysyłkę niezydentyfikowaną. Sprawdź ręcznie."
-    return
+    return 0
 }
 
 SEND_MAIL () {
@@ -102,6 +102,7 @@ RUN () {
     PREPARE_ENV
     CHECK_WHO
     SEND_MAIL
+    exit
 }
 
 RUN

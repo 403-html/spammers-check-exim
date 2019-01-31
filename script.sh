@@ -58,6 +58,7 @@ CHECK_FROM_WHERE () {
     CRON_SEARCH=`tail -n1 $EXIM_LOG | grep $USER | grep $exim_today_date | grep cwd | awk '{print $7}'`
     MAIL_USER=`echo $USER | awk -F "/" '{print $3}'`
     if [[ CRON_SEARCH =~ \-(FCronDaemon)$ ]]
+    then
         WRITE_TO_FILE "$MAIL_USER wysyła maile najprawdopodobniej przez zadanie crona"
         return
     fi
@@ -70,6 +71,7 @@ CHECK_FROM_WHERE () {
     do
         IP_LOCATION=`csf -i $ip | awk -F "(" '{print $2}' | awk -F "/" '{print $1}'`
         if ! [[ IP_LOCATION -eq "PL" ]]
+        then
             WRITE_TO_FILE "Dla $MAIL_USER prawdopodobnie nastąpił wyciek hasła do skrzynki pocztowej"
             return
         fi
@@ -78,6 +80,7 @@ CHECK_FROM_WHERE () {
     # Check if it's form spam
     SCRIPT_CHECK=`tail -n1 $EXIM_LOG | grep $USER | awk '{print $3}' | awk -F "/" '{print $4}'`
     if [[ SCRIPT_CHECK -eq "public_html" ]]
+    then
         WRITE_TO_FILE "$MAIL_USER prawdopodobnie prowadzi wysyłkę z formularza/skrypu"
         return
     fi

@@ -1,6 +1,8 @@
 # SpammersCheck
 Script to control spammers on your server with exim. 
 
+<span style="color: red"><b>WARNING</b> - last commits (not described as "released") are under development and can not work <b>AT ALL</b> at your server</span>
+
 ## Table of Content
 - [Short about script](#SpammersCheck)
 - [Table of Content](#Table-of-Content)

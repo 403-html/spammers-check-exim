@@ -5,7 +5,7 @@
 
 # Variables
 HOSTNAME=$(hostname)
-EXIMMAIL_LOG="/var/log/exim_mainlog"
+EXIM_LOG="/var/log/exim_mainlog"
 MAIL_LOG="/var/log/maillog"
 SUBJECT="Spam check on $HOSTNAME"
 MAIL_DESTINATION="example@example.com"
@@ -13,6 +13,7 @@ BODY_FILE="msg-body.txt"
 NUMBER_OF_PEOPLE=5
 
 # Script
+UNIQ_AND_SORT="uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n"
 
 # Prepare environment
 PREPARE_ENV () {
@@ -38,25 +39,52 @@ WRITE_TO_FILE () {
 
 # Check the last 5 people sending the most messages. 
 CHECK_WHO () {
-    COMMAND=`cat $EXIMMAIL_LOG | awk '{print $3}' | uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n | tail -$NUMBER_OF_PEOPLE`
-    echo "$COMMAND" | while read -r line
+    COMMAND=`cat $EXIM_LOG | awk '{print $3}' | $UNIQ_AND_SORT | tail -n$NUMBER_OF_PEOPLE`
+    echo "$COMMAND" | while read -r user
     do
         # Check if it's path to user
-        if [[ $line =~ .*(cwd=.*) ]]
+        if [[ $user =~ .*(cwd=.*) ]]
         then
-            WRITE_TO_FILE "$line"
+            WRITE_TO_FILE "$user"
         fi
     done
 }
 
 CHECK_FROM_WHERE () {
     USER=$1
-    today_date=`tail -n1 $EXIMMAIL_LOG | awk '{print $1}'`
+
     # Check if it's cron-job
-    CRON_SEARCH=`tail -n1 $EXIMMAIL_LOG | grep $USER | grep $today_date | grep cwd | awk '{print $7}'`
+    exim_today_date=`tail -n1 $EXIM_LOG | awk '{print $1}'`
+    CRON_SEARCH=`tail -n1 $EXIM_LOG | grep $USER | grep $exim_today_date | grep cwd | awk '{print $7}'`
+    MAIL_USER=`echo $USER | awk -F "/" '{print $3}'`
     if [[ CRON_SEARCH =~ \-(FCronDaemon)$ ]]
-        return "$USER wysyła maile najprawdopodobniej przez zadanie crona"
+        WRITE_TO_FILE "$MAIL_USER wysyła maile najprawdopodobniej przez zadanie crona"
+        return
     fi
+    
+    # Check if it's mail password leaking
+    maillog_today_date=`tail -n1 $MAIL_LOG | awk '{print $1 " " $2}'`
+    IP_REGEX="awk '{match($0,/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/); ip = substr($0,RSTART,RLENGTH); print ip}'"
+    LOGGED_IP=`cat $MAIL_LOG | grep $maillog_today_date | grep $MAIL_USER | grep "Login: " | awk '{print $10}' | $IP_REGEX | $UNIQ_AND_SORT`
+    echo "$LOGGED_IP" | while read -r ip
+    do
+        IP_LOCATION=`csf -i $ip | awk -F "(" '{print $2}' | awk -F "/" '{print $1}'`
+        if ! [[ IP_LOCATION -eq "PL" ]]
+            WRITE_TO_FILE "Dla $MAIL_USER prawdopodobnie nastąpił wyciek hasła do skrzynki pocztowej"
+            return
+        fi
+    done
+
+    # Check if it's form spam
+    SCRIPT_CHECK=`tail -n1 $EXIM_LOG | grep $USER | awk '{print $3}' | awk -F "/" '{print $4}'`
+    if [[ SCRIPT_CHECK -eq "public_html" ]]
+        WRITE_TO_FILE "$MAIL_USER prawdopodobnie prowadzi wysyłkę z formularza/skrypu"
+        return
+    fi
+
+    # Not identity sending
+    WRITE_TO_FILE "$MAIL_USER prowadzi wysyłkę niezydentyfikowaną. Sprawdź ręcznie."
+    return
 }
 
 SEND_MAIL () {

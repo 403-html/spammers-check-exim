@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# version 1.0.2
-#
+# version 1.0.3
+# pre 1.1
 
 # Variables
 HOSTNAME=$(hostname)
@@ -46,6 +46,13 @@ CHECK_WHO () {
             WRITE_TO_FILE "$line"
         fi
     done
+}
+
+CHECK_FROM_WHERE () {
+    user=$1
+    today_date=`cat $MAIL_LOG | awk '{}'`
+    # Check if it's cron-job
+    COMMAND=`cat $MAIL_LOG | grep $user | `
 }
 
 SEND_MAIL () {

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# version 1.0.6
+# version 1.0.7
 # pre 1.1
 
 # Variables
@@ -38,7 +38,7 @@ WRITE_TO_FILE () {
 
 # Check the last 5 people sending the most messages. 
 CHECK_WHO () {
-    COMMAND=`cat $EXIM_LOG | awk '{print $3}' | uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n | tail -n$NUMBER_OF_PEOPLE`
+    COMMAND=`cat $EXIM_LOG | grep cwd | grep home | awk '{print $3}' | uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n | tail -n$NUMBER_OF_PEOPLE`
     echo "$COMMAND" | while read -r user
     do
         # Check if it's path to user
@@ -82,7 +82,7 @@ PASS_LEAK () {
 FORM_SPAM () {
     USER=$1
     MAIL_USER=`echo $USER | awk -F "/" '{print $3}'`
-
+    echo "$USER"
     # Check if it's form spam
     SCRIPT_CHECK=`tail -n1 $EXIM_LOG | grep $USER | awk '{print $3}' | awk -F "/" '{print $4}'`
     if [[ $SCRIPT_CHECK -eq "public_html" ]]
@@ -92,6 +92,7 @@ FORM_SPAM () {
     fi
 }
 CHECK_FROM_WHERE () {
+    AMOUNT=`echo $1 | awk -F' ' '{print $1}'`
     USER=`echo $1 | awk -F' ' '{print $2}'`
     
     ANSWER=$(CRON_CHECK "$USER")
@@ -110,11 +111,10 @@ CHECK_FROM_WHERE () {
     if [[ $ANSWER -eq 1 ]]
     then
         return 0
-    else
-        # Can't be identified
-        WRITE_TO_FILE "$USER prowadzi wysyłkę niezydentyfikowaną. Sprawdź ręcznie."
-        return 0
     fi
+
+    WRITE_TO_FILE "Ilość: $AMOUNT Miejsce wysyłki: $USER"
+    WRITE_TO_FILE ""
 }
 
 SEND_MAIL () {

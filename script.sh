@@ -61,11 +61,10 @@ CHECK_FROM_WHERE () {
         WRITE_TO_FILE "$MAIL_USER wysyła maile najprawdopodobniej przez zadanie crona"
         return 0
     fi
-    
+
     # Check if it's mail password leaking
     maillog_today_date=`tail -n1 $MAIL_LOG | awk '{print $1 " " $2}'`
-    IP_REGEX="awk '{match($0,/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/); ip = substr($0,RSTART,RLENGTH); print ip}'"
-    LOGGED_IP=`cat $MAIL_LOG | grep $maillog_today_date | grep $MAIL_USER | grep "Login: " | awk '{print $10}' | $IP_REGEX | uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n`
+    LOGGED_IP=`cat $MAIL_LOG | grep "$maillog_today_date" | grep $MAIL_USER | grep "Login: " | awk '{print $10}' | awk '/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/{print $1}' | uniq -c | awk '{arr[$2]+=$1} END {for (i in arr) {print arr[i],i}}' | sort -n`
     echo "$LOGGED_IP" | while read -r ip
     do
         IP_LOCATION=`csf -i $ip | awk -F "(" '{print $2}' | awk -F "/" '{print $1}'`

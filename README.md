@@ -1,6 +1,8 @@
 # SpammersCheck
 Script to control spammers on your server with exim. 
 
+<span style="color: red"><b>WARNING</b> - last commits (not described as "released") are under development and can not work <b>AT ALL</b> at your server</span>
+
 ## Table of Content
 - [Short about script](#SpammersCheck)
 - [Table of Content](#Table-of-Content)
@@ -52,7 +54,7 @@ Then you can run script.
 
 We use Sequence-based identifiers for versioning.
 
-Current version is 1.0.2
+Current version is 1.0.7 (**ALL** versions under 1.1 are under dev and are not for production servers)
 
 ## Authors
 

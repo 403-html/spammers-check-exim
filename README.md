@@ -54,7 +54,7 @@ Then you can run script.
 
 We use Sequence-based identifiers for versioning.
 
-Current version is 1.0.6
+Current version is 1.0.6 (**ALL** versions under 1.1 are under dev and are not for production servers)
 
 ## Authors
 

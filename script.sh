@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# version 1.0.4
+# version 1.0.5
 # pre 1.1
 
 # Variables
@@ -50,7 +50,7 @@ CHECK_WHO () {
 }
 
 CHECK_FROM_WHERE () {
-    USER=$1
+    USER=`echo $1 | awk -F " " '{print $2}'`
 
     # Check if it's cron-job
     exim_today_date=`tail -n1 $EXIM_LOG | awk '{print $1}'`

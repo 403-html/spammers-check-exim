@@ -1,7 +1,7 @@
 # SpammersCheck
-Script to control spammers on your server with exim. 
+Script to control spammers on your server with exim.
 
-<span style="color: red"><b>WARNING</b> - last commits (not described as "released") are under development and can not work <b>AT ALL</b> at your server</span>
+<!-- <span style="color: red"><b>WARNING</b> - last commits (not described as "released") are under development and can not work <b>AT ALL</b> at your server</span> -->
 
 ## Table of Content
 - [Short about script](#SpammersCheck)
@@ -47,14 +47,14 @@ Then you can run script.
 
 ## Built With
 
-* [Mailx](https://linux.die.net/man/1/mailx) - Send and receive Internet mail 
+* [Mailx](https://linux.die.net/man/1/mailx) - Send and receive Internet mail
 * [Exim](https://www.exim.org/) - Message Transfer Agent made by University of Cambridge
 
 ## Versioning
 
 We use Sequence-based identifiers for versioning.
 
-Current version is 1.0.7 (**ALL** versions under 1.1 are under dev and are not for production servers)
+Current version is 1.0.8-dev (**ALL** versions under 1.1 are under dev and can have issues with working on *servers*)
 
 ## Authors
 

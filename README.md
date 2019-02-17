@@ -58,7 +58,7 @@ Then you can run script.
 
 We use Sequence-based identifiers for versioning.
 
-Current version is 1.0.8-dev (**ALL** versions under 1.1 are under dev and can have issues with working on *servers*)
+Current version is 1.0.9-dev (**ALL** versions under 1.1 are under dev and can have issues with working on *servers*)
 
 ## Authors
 

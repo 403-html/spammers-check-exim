@@ -28,6 +28,10 @@ _Centos_
 ```
 yum install mailx
 ```
+
+*CSF* - Config Server Firewall
+[Official tutorial from CSF team how to install their soft](https://download.configserver.com/csf/install.txt)
+
 ### Installing and running
 
 Download script from below command or head to [releases](https://github.com/WhiteLeash/spammers-check-exim/releases) where you can find even older releases of this script.

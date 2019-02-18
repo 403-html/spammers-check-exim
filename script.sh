@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# version 1.0.10-dev
-# pre 1.1
+# version 1.1
 
 # Manual Variables
 MAIL_DESTINATION="example@example.com"

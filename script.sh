@@ -39,7 +39,7 @@ CHECK_WHO () {
 
         FORM_CHECK=$(echo $SENDER | awk 'BEGIN { FS = "/" } ; { print $5 }')
         if [[ "$FORM_CHECK" ]]; then
-            echo "Użytkownik \"$SENDER_NAME\" prowadzi wysyłkę z katalogu w $(echo $SENDER | awk 'BEGIN { FS = "/" } ; {out=""; for(i=4;i<=NF;i++){out=out"/"$i}; print out}')" >> $MAILBODY
+            echo "Użytkownik \"$SENDER_NAME\" prowadzi wysyłkę z katalogu w $(echo $SENDER | awk 'BEGIN { FS = "/" } ; {out=""; for(i=2;i<=NF;i++){out=out"/"$i}; print out}')" >> $MAILBODY
             continue
         fi
 
@@ -53,7 +53,7 @@ CHECK_WHO () {
                 do    
                     POST_CHECK=$(cat ${DOMLOGS}/${SENDER_NAME}/* | grep $STAMP | grep -i post)
                     if [[ "$POST_CHECK" ]]; then
-                        echo "Użytkownik \"$SENDER_NAME\" prowadzi wysyłkę z katalogu w $(echo $SENDER | awk 'BEGIN { FS = "/" } ; {out=""; for(i=4;i<=NF;i++){out=out"/"$i}; print out}')" >> $MAILBODY
+                        echo "Użytkownik \"$SENDER_NAME\" prowadzi wysyłkę z katalogu w $(echo $SENDER | awk 'BEGIN { FS = "/" } ; {out=""; for(i=2;i<=NF;i++){out=out"/"$i}; print out}')" >> $MAILBODY
                         TIME_ANSWER=$(($TIME_ANSWER+1))
                         break
                     fi

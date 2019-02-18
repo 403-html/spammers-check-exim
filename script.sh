@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# version 1.0.9-dev
+# version 1.0.10-dev
 # pre 1.1
 
 # Manual Variables
@@ -8,6 +8,7 @@ MAIL_DESTINATION="example@example.com"
 PEOPLE_OUTPUT="5"
 EXIM_PATH="/var/log/exim_mainlog"
 MAIL_PATH="/var/log/maillog"
+DOMLOGS_PATH="/var/log/apache2/domlogs"
 
 # Automatic Variables
 HOSTNAME=$(hostname)
@@ -31,15 +32,15 @@ CHECK_WHO () {
     do
         SENDER_NAME=$(echo $SENDER | awk 'BEGIN { FS = "/" } ; { print $3 }')
 
-        FORM_CHECK=$(echo $SENDER | awk 'BEGIN { FS = "/" } ; { print $5 }')
-        if [[ "$FORM_CHECK" ]]; then
-            echo "Użytkownik \"$SENDER_NAME\" prowadzi wysyłkę z katalogu w $(echo $SENDER | awk 'BEGIN { FS = "/" } ; {out=""; for(i=4;i<=NF;i++){out=out"/"$i}; print out}')" >> $MAILBODY
-            continue
-        fi
-        
         CRON_CHECK=$(cat $EXIM_PATH | grep $SENDER_NAME | grep cwd | awk '{print $7}' | tail -n1)
         if [[ "$CRON_CHECK" =~ \-(FCronDaemon)$ ]]; then
             echo "Użytkownik \"$SENDER_NAME\" prowadzi wysyłkę z zadania CRON" >> $MAILBODY
+            continue
+        fi
+
+        FORM_CHECK=$(echo $SENDER | awk 'BEGIN { FS = "/" } ; { print $5 }')
+        if [[ "$FORM_CHECK" ]]; then
+            echo "Użytkownik \"$SENDER_NAME\" prowadzi wysyłkę z katalogu w $(echo $SENDER | awk 'BEGIN { FS = "/" } ; {out=""; for(i=4;i<=NF;i++){out=out"/"$i}; print out}')" >> $MAILBODY
             continue
         fi
 
@@ -47,7 +48,22 @@ CHECK_WHO () {
         echo "$MAILS_LIST" | while read -r MAIL
         do
             if [[ "$MAIL" =~ "$HOSNAME" ]]; then
-                echo "Użytkownikowi \"$SENDER_NAME\" prawdopodobnie wyciekły dane do cPanel" >> $MAILBODY
+                SEND_TIMESTAMP=$(cat $EXIM_PATH | grep $EXIM_DATE | grep $SENDER | awk '{print $2}')
+                TIME_ANSWER=0
+                echo "$SEND_TIMESTAMP" | while read -r STAMP
+                do    
+                    POST_CHECK=$(cat ${DOMLOGS}/${SENDER_NAME}/* | grep $STAMP | grep -i post)
+                    if [[ "$POST_CHECK" ]]; then
+                        echo "Użytkownik \"$SENDER_NAME\" prowadzi wysyłkę z katalogu w $(echo $SENDER | awk 'BEGIN { FS = "/" } ; {out=""; for(i=4;i<=NF;i++){out=out"/"$i}; print out}')" >> $MAILBODY
+                        TIME_ANSWER=$(($TIME_ANSWER+1))
+                        break
+                    fi
+                done
+
+                if [[ $TIME_ANSWER -ne 0 ]]; then
+                    echo "Użytkownikowi \"$SENDER_NAME\" prawdopodobnie wyciekły dane do cPanel" >> $MAILBODY
+                    continue
+                fi
                 continue
             fi
 

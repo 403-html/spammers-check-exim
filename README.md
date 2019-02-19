@@ -1,6 +1,6 @@
 # SpammersCheck
 Script to control spammers on your server with exim.
-In fact it's my first repo with kinda automation thing, so be patient and if you will find any bugs - push [Issue](https://github.com/WhiteLeash/spammers-check-exim/issues) or make [Pull requests](https://github.com/WhiteLeash/spammers-check-exim/pulls) to improve this script.
+In fact it's my first repo with kinda automation thing, so be patient and if you will find any bugs - push [Issue](https://github.com/WhiteLeash/spammers-check-exim/issues) or make [Pull requests](https://github.com/WhiteLeash/spammers-check-exim/pulls) to improve this script and you will be part of sweet [contributors](https://github.com/WhiteLeash/spammers-check-exim/graphs/contributors) team.
 
 ## Table of Content
 - [Short about script](#SpammersCheck)

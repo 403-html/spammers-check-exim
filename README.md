@@ -1,7 +1,6 @@
 # SpammersCheck
 Script to control spammers on your server with exim.
-
-<!-- <span style="color: red"><b>WARNING</b> - last commits (not described as "released") are under development and can not work <b>AT ALL</b> at your server</span> -->
+In fact it's my first repo with kinda automation thing, so be patient and if you will find any bugs - push [Issue](https://github.com/WhiteLeash/spammers-check-exim/issues) or make [Pull requests](https://github.com/WhiteLeash/spammers-check-exim/pulls) to improve this script.
 
 ## Table of Content
 - [Short about script](#SpammersCheck)

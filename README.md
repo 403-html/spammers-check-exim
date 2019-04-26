@@ -1,6 +1,6 @@
 # SpammersCheck
 Script to control spammers on your server with exim.
-In fact it's my first repo with kinda automation thing, so be patient and if you will find any bugs - push [Issue](https://github.com/WhiteLeash/spammers-check-exim/issues) or make [Pull requests](https://github.com/WhiteLeash/spammers-check-exim/pulls) to improve this script and you will be part of sweet [contributors](https://github.com/WhiteLeash/spammers-check-exim/graphs/contributors) team.
+In fact it's my first repo with kinda automation thing, so be patient and if you will find any bugs - push [Issue](https://github.com/403-html/spammers-check-exim/issues) or make [Pull requests](https://github.com/403-html/spammers-check-exim/pulls) to improve this script and you will be part of sweet [contributors](https://github.com/403-html/spammers-check-exim/graphs/contributors) team.
 
 ## Table of Content
 - [Short about script](#SpammersCheck)
@@ -33,7 +33,7 @@ yum install mailx
 
 ### Installing and running
 
-Download script from below command or head to [releases](https://github.com/WhiteLeash/spammers-check-exim/releases) where you can find even older releases of this script.
+Download script from below command or head to [releases](https://github.com/403-html/spammers-check-exim/releases) where you can find even older releases of this script.
 ```
 wget https://github.com/WhiteLeash/spammers-check-exim/blob/master/script.sh
 ```
@@ -61,9 +61,9 @@ Current version is 1.1 (**ALL** versions under 1.1 are under dev and can have is
 
 ## Authors
 
-* **Tymoteusz Stępień** - *Initial work* - [WhiteLeash](https://github.com/WhiteLeash)
+* **Tymoteusz Stępień** - *Initial work* - [403-html](https://github.com/403-html)
 
-See also the list of [contributors](https://github.com/WhiteLeash/spammers-check-exim/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/403-html/spammers-check-exim/graphs/contributors) who participated in this project.
 
 ## License
 
